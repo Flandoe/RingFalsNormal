@@ -131,6 +131,21 @@ POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZIRT,
     (float, time, time)
 )
 
+//My
+struct MYPointXYZIRT {
+    PCL_ADD_POINT4D;
+    std::uint8_t intensity;
+    std::uint32_t timestampSec;
+    std::uint32_t timestampNsec;
+    std::uint8_t ring;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+} EIGEN_ALIGN16;
+POINT_CLOUD_REGISTER_POINT_STRUCT(MYPointXYZIRT,
+    (float, x, x) (float, y, y) (float, z, z) (std::uint8_t, intensity, intensity)
+    (std::uint32_t, timestampSec, timestampSec) (std::uint32_t, timestampNsec, timestampNsec)
+    (std::uint8_t, ring, ring)
+)
+
 // Ouster
 struct ousterPointXYZIRT {
     PCL_ADD_POINT4D;

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(ring_fals)
 
-SET(CMAKE_BUILD_TYPE "Release")
+SET(CMAKE_BUILD_TYPE "DEBUG")
 
 ADD_COMPILE_OPTIONS(-std=c++14 )
 ADD_COMPILE_OPTIONS(-std=c++14 )
@@ -56,13 +56,13 @@ find_package(Eigen3 REQUIRED)
 find_package(PCL 1.7 REQUIRED)
 
 ## set OpenCV DIR
-if ($ENV{ROS_DISTRO} STREQUAL "kinetic")
-  Set(OpenCV_DIR "/home/hk/opencv-3.3.1/build") # important find opencv version
-else()
-  Set(OpenCV_DIR "/home/autolab/opencv-3.2.0/build") # important find opencv version, Neotic
-endif ()
+# if ($ENV{ROS_DISTRO} STREQUAL "kinetic")
+#   Set(OpenCV_DIR "/home/hk/opencv-3.3.1/build") # important find opencv version
+# else()
+#   Set(OpenCV_DIR "/home/autolab/opencv-3.2.0/build") # important find opencv version, Neotic
+# endif ()
 
-find_package(OpenCV 3.2 QUIET)
+find_package(OpenCV 4.0 QUIET)
 
 message(Eigen: ${EIGEN3_INCLUDE_DIR})
 

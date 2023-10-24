@@ -336,11 +336,36 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
     pl_corn.clear();
     pl_full.clear();
 
+//     pcl::PointCloud<PointXYZIRT>::Ptr pl_orig(new pcl::PointCloud<PointXYZIRT>());
+// //    pcl::PointCloud<PointXYZIRT>::Ptr pl_orig;
+//     pcl::fromROSMsg(*msg, *pl_orig);
+    //
+    pcl::PointCloud<MYPointXYZIRT>::Ptr pl_orig_my(new pcl::PointCloud<MYPointXYZIRT>());
+    pcl::fromROSMsg(*msg, *pl_orig_my);
     pcl::PointCloud<PointXYZIRT>::Ptr pl_orig(new pcl::PointCloud<PointXYZIRT>());
-//    pcl::PointCloud<PointXYZIRT>::Ptr pl_orig;
-    pcl::fromROSMsg(*msg, *pl_orig);
+    // Convert to Velodyne format
+    pl_orig->points.resize(pl_orig_my->size());
+    // std::cout << "pl_orig_my->size(): " << pl_orig_my->size() << std::endl;
+    pl_orig->is_dense = pl_orig_my->is_dense;
+    pl_orig->width = pl_orig_my->width;
+    pl_orig->height = pl_orig_my->height;
+    double timestamp = msg->header.stamp.toSec();
+    #pragma omp parallel for
+    for (size_t i = 0; i < pl_orig_my->size(); i++)
+    {
+        auto &src = pl_orig_my->points[i];
+        auto &dst = pl_orig->points[i];
+        dst.x = src.x;
+        dst.y = src.y;
+        dst.z = src.z;
+        dst.intensity = src.intensity;
+        dst.ring = src.ring;
+        // time is float and keep the relative time in a scan         
+        dst.time = src.timestampSec - timestamp + src.timestampNsec * 1e-9f;// order is important, - timestamp first to avoid overflow
+    }
+
     int plsize = pl_orig->points.size();
-//    ROS_INFO("cloud input size: %d", plsize);
+   ROS_INFO("cloud input size: %d", plsize);
 
     if (ringfals_en)
     {
