@@ -114,6 +114,14 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
 
     visualizeCloud(p_pre->pl_surf, msg->header);
 
+    double time = msg->header.stamp.toSec();
+    std::string save_path = "/home/mic/scans_normal/" +std::to_string(time) +".pcd";
+    PointCloudXYZI::Ptr  ptr2(new PointCloudXYZI());
+    pcl::copyPointCloud(p_pre->pl_surf, *ptr2);
+    ptr2->height = 1;
+    ptr2->width = ptr2->points.size();
+    pcl::io::savePCDFile(save_path, *ptr2);
+
     visualizeNormals(p_pre->pl_surf, msg->header);
 }
 
